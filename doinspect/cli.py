@@ -1,6 +1,6 @@
 import argparse
 import docker
-from dinspect.inspector import inspect_env, inspect_network, inspect_ports, inspect_volumes
+from doinspect.inspector import inspect_env, inspect_network, inspect_ports, inspect_volumes
 
 def main():
     client = docker.from_env()
