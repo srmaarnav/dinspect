@@ -1,14 +1,25 @@
+import os
+import platform
+
 import docker
 
-# Initialize the Docker client
-client = docker.from_env()
+# Ensure DOCKER_HOST is set if not already set in the environment
+if "DOCKER_HOST" not in os.environ:
+    if platform.system() == "Windows":
+        os.environ["DOCKER_HOST"] = "tcp://localhost:2375"
+    else:
+        os.environ["DOCKER_HOST"] = "unix:///var/run/docker.sock"
+
+# Now initialize the Docker client with the appropriate docker_host
+client = docker.DockerClient(base_url=os.environ["DOCKER_HOST"])
+
 
 def inspect_env(container_id):
     """Fetch and display environment variables of a running container."""
     try:
         container = client.containers.get(container_id)
-        env_vars = container.attrs['Config']['Env']
-        
+        env_vars = container.attrs["Config"]["Env"]
+
         print(f"Environment variables for container '{container_id}':\n")
         for env in env_vars:
             print(f"  {env}")
@@ -17,6 +28,7 @@ def inspect_env(container_id):
         print(f"Error: Container '{container_id}' not found.")
     except docker.errors.APIError as e:
         print(f"Error: Docker API error - {e}")
+
 
 def inspect_network(container_id):
     """Retrieve network information of a running container."""
@@ -34,7 +46,7 @@ def inspect_network(container_id):
         # Display Network Statistics
         stats = container.stats(stream=False)
         net_stats = stats["networks"]
-        
+
         print("  Network Usage (bytes):")
         for iface, data in net_stats.items():
             print(f"    Interface: {iface}")
@@ -45,6 +57,7 @@ def inspect_network(container_id):
         print(f"Error: Container '{container_id}' not found.")
     except docker.errors.APIError as e:
         print(f"Error: Docker API error - {e}")
+
 
 def inspect_ports(container_id):
     """Retrieve port mappings of a running container."""
@@ -84,7 +97,9 @@ def inspect_volumes(container_id):
 
         print(f"Volume Mappings for container '{container_id}':\n")
         for mount in mounts:
-            print(f"  Host: {mount['Source']} -> Container: {mount['Destination']} ({mount['Type']})")
+            print(
+                f"  Host: {mount['Source']} -> Container: {mount['Destination']} ({mount['Type']})"
+            )
 
     except docker.errors.NotFound:
         print(f"Error: Container '{container_id}' not found.")

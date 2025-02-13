@@ -1,17 +1,13 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="doinspect",
-    version="0.1.0",
+    version="0.1.5",
     packages=find_packages(),
     install_requires=[
-        "docker"
+        "docker",
     ],
-    entry_points={
-        "console_scripts": [
-            "doinspect=doinspect.cli:main"
-        ]
-    },
+    entry_points={"console_scripts": ["doinspect=doinspect.cli:main"]},
     author="Arnav Sharma",
     author_email="mail@arnavsharma.com.np",
     description="A CLI tool to inspect running Docker containers",
@@ -20,8 +16,8 @@ setup(
     url="https://github.com/srmaarnav/doinspect",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: MIT License",
+        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )
