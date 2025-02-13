@@ -18,8 +18,3 @@ doinspect -c my_container   # Inspect all details
 doinspect -c my_container -e  # Show environment variables
 doinspect -c my_container -n  # Show network usage
 ```
-
-## License
-
-MIT License
-
